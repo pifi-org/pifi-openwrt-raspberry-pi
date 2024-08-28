@@ -12,3 +12,6 @@ There is also the PiFi community for participation - community.pifi.org
 
 Documentation on using the firmware / app is available at docs.pifi.org (more documentation is required explaining the modifications on PiFi firmware vs regular OpenWRT but you are free to explore the source code). 
 
+
+**Open Source**
+The world of open source is all a bit new to me and I will try to follow best practices and even try to make gradual commits rather than publishing it at once in future which will be helpful as code contributions and the evolution of the project more open. I also will document the existing firmare changes (compared with regular OpenWRT) more extensively in due course - there's a lot of work to do and this project currently has a single developer so please bear with me.
