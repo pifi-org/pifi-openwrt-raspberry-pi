@@ -1,3 +1,10 @@
+
+**Downloading Firmware**
+
+For downloads, see pifi.org/downloads or the GitHub releases page here - https://github.com/pifi-org/pifi-openwrt-raspberry-pi/releases
+
+
+
 ## Building from Source
 
 You can of course build your own firmware from source based on the customisations in PiFi firmware - all source code and build.config files are provided on GitHub and you can also see https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem
