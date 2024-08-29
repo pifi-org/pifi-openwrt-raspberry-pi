@@ -15,11 +15,11 @@ You can potentially get it working on other non Raspberry Pi 4 or Pi 5 firmware 
 
 ## Sharing Feedback or Reporting Issues
 
-You can share feedback or report bugs by visiting pifi.org/feedback
+You can share feedback or report bugs by visiting https://www.pifi.org/feedback
 
-There is also the PiFi community for participation - community.pifi.org
+There is also the PiFi community for participation - https://community.pifi.org
 
-Documentation on using the firmware / app is available at docs.pifi.org (more documentation is required explaining the modifications on PiFi firmware vs regular OpenWRT but you are free to explore the source code). 
+Documentation on using the firmware / app is available at https://docs.pifi.org (more documentation is required explaining the modifications on PiFi firmware vs regular OpenWRT but you are free to explore the source code). 
 
 
 **Open Source**
