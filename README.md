@@ -1,7 +1,9 @@
 
-**Downloading Firmware**
+## Downloading Firmware for Raspberry Pi 4 or 5
 
-For downloads, see pifi.org/downloads or the GitHub releases page here - https://github.com/pifi-org/pifi-openwrt-raspberry-pi/releases
+For latest versions, see pifi.org/downloads or the GitHub releases page here - https://github.com/pifi-org/pifi-openwrt-raspberry-pi/releases
+
+**Note: Be sure to select the correct firmware for your model (either Raspberry Pi 4 or 5)**
 
 
 
