@@ -23,4 +23,4 @@ Documentation on using the firmware / app is available at https://docs.pifi.org 
 
 
 **Open Source**
-The world of open source is all a bit new to me and I will try to follow best practices and even try to make gradual commits rather than publishing it at once in future which will be helpful as code contributions and the evolution of the project more open. I also will document the existing firmare changes (compared with regular OpenWRT) more extensively in due course - there's a lot of work to do and this project currently has a single developer so please bear with me.
+The world of open source is all a bit new to me and I will try to follow best practices and even try to make gradual public commits rather than publishing it at once in future which will be helpful as code contributions and the evolution of the project more open. I also will document the existing firmare changes (compared with regular OpenWRT) more extensively in due course - there's a lot of work to do and this project currently has a single developer so please bear with me.
