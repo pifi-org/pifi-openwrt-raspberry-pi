@@ -25,6 +25,8 @@ PiFi is a project with router firmware, a smartphone app and USB accessory that 
 
 You can download the latest firmware image/apps at [pifi.org/downloads](https://www.pifi.org/downloads)
 
+Or download on the [GitHub releases](https://github.com/pifi-org/pifi-openwrt-raspberry-pi/releases) page (be sure to select the correct model and get the app ([here](https://www.pifi.org/app))
+
 Installation is easy (download, flash with Raspberry Pi imager, insert SD card and power on and PiFi should show in WiFi Settings (default password Raspberry314). Then then follow the setup steps in the PiFi app. 
 
 For more detailed download and setup instructions, see the [download and setup guide](https://docs.pifi.org/download-setup)
