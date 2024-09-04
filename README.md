@@ -1,4 +1,5 @@
-<h1> PiFi.org Router Project</h1>
+<h1>PiFi.org</h1>
+<h2>Turn Raspberry Pi 4 or 5 into the ULTIMATE VPN Travel/Wireless Router</h2>
 
 <p align="center">
   <img src="https://pifi-app.nyc3.cdn.digitaloceanspaces.com/pro-easy3%20(1).png" alt="PiFi Raspberry Pi Router" />
