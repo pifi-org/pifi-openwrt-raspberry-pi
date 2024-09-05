@@ -1,9 +1,5 @@
-<h1>PiFi.org</h1>
-<h2>Turn Raspberry Pi 4 or 5 into the ULTIMATE VPN Travel/Wireless Router</h2>
 
-<p align="center">
-  <img src="https://pifi-app.nyc3.cdn.digitaloceanspaces.com/pro-easy3%20(1).png" alt="PiFi Raspberry Pi Router" />
-</p>
+
 
 
 PiFi is a project with router firmware, a smartphone app and USB accessory that lets you very quickly turn Raspberry Pi into a powerful wireless router.
@@ -19,7 +15,7 @@ PiFi is a project with router firmware, a smartphone app and USB accessory that 
 - **Free**: Open-source firmware and free app ([download](https://www.pifi.org/downloads))
 
 ---
-![PiFi Router for Raspberry Pi](https://pifi-app.nyc3.cdn.digitaloceanspaces.com/pifi-head%20(1).png)
+
 
 ## Installation Instructions:
 
