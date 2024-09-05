@@ -1,5 +1,4 @@
-
-
+<h2> PiFi - The Simple Raspberry Pi Router Project</h2>
 
 
 PiFi is a project with router firmware, a smartphone app and USB accessory that lets you very quickly turn Raspberry Pi into a powerful wireless router.
