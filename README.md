@@ -10,7 +10,7 @@ PiFi is a project with free router firmware, a smartphone app and USB accessory 
 - **AdGuard Home**: Block ads and trackers in apps and browser on all devices
 - **Network Storage**: Use your SD card or USB Flash Drives for easy network sharing of files, documents and more
 - **OpenWRT Under-the-Hood**: An optimised build of OpenWRT so you still have LuCI/SSH access as well as out-of-the-box support for Wireguard, OpenVPN, AdGuardHome, Network Storage and more
-- **Community Support**: Ask questions and share feedback in the [PiFi Community Forum](https://www.pifi.org/community)
+- **Community Support**: Ask questions and share feedback in the [PiFi Community Forum](https://community.pifi.org)
 - **Free**: Open-source firmware and free app ([download](https://www.pifi.org/downloads))
 
 ---
