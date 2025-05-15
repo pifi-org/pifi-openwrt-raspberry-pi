@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Check if 'lsusb -t' contains 'rtl88x2bu'
+if lsusb  | grep -q "802.11ac"; then
+    # Copy a vanilla wireless configuration file into place
+    cp /etc/sysp/defaults/wireless-default /etc/config/wireless
+
+
+    # Restart the network to apply changes
+   sh /etc/sysp/reboot.sh
+else
+    echo "Device not found"
+fi

@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Logging path
+LOGFILE="/tmp/10-mount.log"
+
+# Load helper functions
+. /lib/functions.sh
+. /lib/functions/network.sh
+
+# Function to update fstab, mount, and configure Samba
+update_fstab_mount_and_samba() {
+    local devname="$1"
+    local mountpoint="$2"
+    local sambaname
+
+    # Get next available PiFi USB name index
+    existing_index=$(uci show samba4 | grep ".path='$mountpoint'" | cut -d'.' -f2 | sed -n 's/\@sambashare\[\(.*\)\]/\1/p')
+    if [ -z "$existing_index" ]; then
+        index=$(uci show samba4 | grep "=sambashare" | wc -l)
+        let "index++"
+        sambaname="PiFi USB $index"
+    else
+        sambaname=$(uci get samba4.@sambashare[$existing_index].name)
+    fi
+
+    # Create the mount point directory if it doesn't exist
+    if [ ! -d "$mountpoint" ]; then
+        echo "Creating mount point: $mountpoint" >> $LOGFILE
+        mkdir -p "$mountpoint"
+    fi
+
+    # Update fstab if no entry exists for the mount point
+    if ! grep -qs "$mountpoint" /etc/config/fstab; then
+        echo "Adding fstab entry for $devname at $mountpoint" >> $LOGFILE
+        uci add fstab mount
+        uci set fstab.@mount[-1].device="$devname"
+        uci set fstab.@mount[-1].target="$mountpoint"
+        uci set fstab.@mount[-1].enabled='1'
+        uci set fstab.@mount[-1].enabled_fsck='0'
+        uci set fstab.@mount[-1].options='rw,sync'
+        uci commit fstab
+    fi
+
+    # Mount the device if not already mounted
+    if ! mount | grep -qs "$mountpoint"; then
+        echo "Mounting $devname to $mountpoint" >> $LOGFILE
+        mount "$devname" "$mountpoint"
+    fi
+
+    # Update Samba configuration if no entry exists
+    if [ -z "$existing_index" ]; then
+        echo "Adding Samba share for $mountpoint as $sambaname" >> $LOGFILE
+        uci add samba4 sambashare
+        uci set samba4.@sambashare[-1].name="$sambaname"
+        uci set samba4.@sambashare[-1].path="$mountpoint"
+        uci set samba4.@sambashare[-1].read_only='no'
+        uci set samba4.@sambashare[-1].force_root='1'
+        uci set samba4.@sambashare[-1].guest_ok='yes'
+        uci set samba4.@sambashare[-1].guest_only='yes'
+        uci set samba4.@sambashare[-1].create_mask='0666'
+        uci set samba4.@sambashare[-1].dir_mask='0777'
+        uci commit samba4
+        /etc/init.d/samba4 reload
+    else
+        echo "Samba share already exists for $mountpoint, skipping addition" >> $LOGFILE
+    fi
+}
+
+# Filtering action to only process devices that match /dev/sd*
+if [ -n "$DEVNAME" ]; then
+    DEV_PATH="/dev/$DEVNAME"
+    MOUNT_POINT="/mnt/$DEVNAME"
+
+    # Validate if DEVNAME starts with sd (e.g., sda, sdb, sdc)
+    if echo "$DEVNAME" | grep -q '^sd[a-z]\+$'; then
+        # Find first partition (e.g., /dev/sda1, /dev/sda2)
+        FIRST_PARTITION=$(ls /dev/${DEVNAME}* | grep '^/dev/sd[a-z]\+[0-9]$' | sort | head -n 1)
+
+        if [ -n "$FIRST_PARTITION" ]; then
+            DEV_PATH="$FIRST_PARTITION"
+            MOUNT_POINT="/mnt/$(basename $FIRST_PARTITION)"
+        fi
+
+        if [ "$ACTION" = "add" -a -n "$DEV_PATH" ]; then
+            update_fstab_mount_and_samba "$DEV_PATH" "$MOUNT_POINT"
+        fi
+    fi
+fi

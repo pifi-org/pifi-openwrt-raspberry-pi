@@ -1,0 +1,23 @@
+################################################################################
+# Bootloader configuration - config.txt
+################################################################################
+
+################################################################################
+# For overclocking and various other settings, see:
+# https://www.raspberrypi.com/documentation/computers/config_txt.html
+################################################################################
+
+# OpenWrt config
+include distroconfig.txt
+
+[all]
+# Place your custom settings here.
+usb_max_current_enable=1
+# Enable the PCIe external connector
+dtparam=pciex1
+# Force Gen 3.0 speeds
+dtparam=pciex1_gen=3
+
+dtoverlay=gpio-fan,gpiopin=14,temp=80000
+
+console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=squashfs,ext4 rootwait ipv6.disable=1

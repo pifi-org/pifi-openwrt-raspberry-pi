@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Copy files from /etc/sysp/defaults/restoreconfig/ to /etc/config/
+cp -r /etc/sysp/defaults/restoreconfig/* /etc/config/
+
+# Reboot the system
+reboot

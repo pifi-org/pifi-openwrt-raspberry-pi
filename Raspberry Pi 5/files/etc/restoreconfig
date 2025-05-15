@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Copy files from /etc/sysp/defaults/restoreconfig/ to /etc/config/
+cp -r /etc/sysp/defaults/restoreconfig/* /etc/config/;
+uci commit network;
+uci commit wireless;
+uci commit dhcp;
+
+# Reboot the system
+reboot

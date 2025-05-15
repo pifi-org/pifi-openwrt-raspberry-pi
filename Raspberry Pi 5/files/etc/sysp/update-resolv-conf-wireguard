@@ -1,0 +1,44 @@
+#!/bin/sh
+
+CONFIG_FILE="/etc/adguard/dns/config"
+ADGUARD_HOME_CONFIG="/etc/adguardhome.yaml"
+USE_PI_APP=""""
+WG_UPSTREAM="/etc/adguard/dns/wireguard-upstream"
+OV_UPSTREAM="/etc/adguard/dns/openvpn-upstream"
+
+update_adguard_config() {
+    local desired_upstream=$1
+    local need_restart=false
+
+    # Check current upstream setting
+    current_upstream=$(grep "upstream_dns_file:" $ADGUARD_HOME_CONFIG | awk '{print $2}')
+
+    if [ "$current_upstream" != "$desired_upstream" ]; then
+        # Replace the current upstream with the desired one
+        sed -i "s|upstream_dns_file:.*|upstream_dns_file: $desired_upstream|" $ADGUARD_HOME_CONFIG
+        need_restart=true
+    fi
+
+    if $need_restart; then
+        uci commit adguardhome
+        /etc/init.d/adguardhome restart
+    fi
+}
+
+case "$1" in
+    up)
+        # Fetch the DNS settings from UCI for WireGuard interface
+        wg_dns=$(uci get network.wggb.dns)
+        echo "$wg_dns" > $WG_UPSTREAM
+
+        # Check configuration choice
+        if [ "$(cat $CONFIG_FILE)" = "true" ]; then
+            update_adguard_config $WG_UPSTREAM
+        else
+            update_adguard_config $USE_PI_APP
+        fi
+        ;;
+    down)
+        update_adguard_config $USE_PI_APP
+        ;;
+esac

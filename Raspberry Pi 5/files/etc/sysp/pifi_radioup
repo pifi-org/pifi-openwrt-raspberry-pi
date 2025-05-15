@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Get the path from uci
+uci_path=$(uci get wireless.radio1.path)
+
+# Compare the obtained path with the specified string
+if [ "$uci_path" = "platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0" ]; then
+  # Restart the network service if the paths match
+  /etc/init.d/network restart
+fi

@@ -1,0 +1,52 @@
+
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix 'fdfa:b09e:00a0::/48'
+	option packet_steering '1'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	option ports 'eth1'
+
+config interface 'lan'
+	option device 'br-lan'
+	option force_link '1'
+	option proto 'static'
+	option ipaddr '192.168.3.14'
+	option netmask '255.255.255.0'
+	option ip6assign '60'
+
+config interface 'wwan'
+	option proto 'dhcp'
+	option metric '20'
+	option peerdns '1'
+
+config interface 'wan'
+	option device 'eth0'
+	option proto 'dhcp'
+	option peerdns '1'
+
+config interface 'wggb'
+	option proto 'wireguard'
+	option private_key '1.1.1.1'
+	option disabled '1'
+	option addresses '1.1.1.1'
+	option dns '1.1.1.1'
+
+config wireguard_wggb
+	option public_key 'KeY'
+	option private_key 'KeY'
+	list allowed_ips '0.0.0.0/1'
+	list allowed_ips '128.0.0.0/1'
+	option route_allowed_ips '1'
+	option endpoint_host 'KeY'
+	option endpoint_port '51820'
+	option persistent_keepalive '25'
+	option disabled '0'
+

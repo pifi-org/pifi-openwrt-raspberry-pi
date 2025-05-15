@@ -1,0 +1,33 @@
+
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option path 'platform/axi/1001100000.mmc/mmc_host/mmc1/mmc1:0001/mmc1:0001:1'
+	option channel '11'
+	option band '2g'
+	option cell_density '0'
+	option txpower '20'
+
+config wifi-device 'radio1'
+	option type 'mac80211'
+	option path 'platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0'
+	option channel '48'
+	option band '5g'
+	option htmode 'VHT80'
+	option cell_density '0'
+
+config wifi-iface 'default_radio1'
+	option device 'radio1'
+	option network 'lan'
+	option mode 'ap'
+	option ssid 'PiFi 5'
+	option encryption 'psk2'
+	option key 'Raspberry314'
+
+config wifi-iface 'wifinet1'
+	option device 'radio0'
+	option mode 'sta'
+	option network 'wwan'
+	option ssid 'Unavailable'
+	option encryption 'psk2'
+	option key 'Raspberry314'
+

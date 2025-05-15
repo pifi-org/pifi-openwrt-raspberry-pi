@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Define the file path
+FILE_PATH="/etc/sysp/usb"
+
+echo "Checking for the file at $FILE_PATH..."
+
+# Check if the file exists
+if [ -f "$FILE_PATH" ]; then
+    echo "$FILE_PATH exists."
+    
+    # Check if the file contains '0'
+    if grep -q '0' "$FILE_PATH"; then
+        echo "The file $FILE_PATH contains '0'."
+        
+        # Retrieve the path from uci configuration
+        radio_path=$(uci get wireless.radio1.path)
+        echo "Retrieved radio path: $radio_path"
+
+        # Define the paths to check against
+        path1="platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0"
+        path2="platform/axi/1000120000.pcie/1f00300000.usb/xhci-hcd.1/usb4/4-1/4-1:1.0"
+
+        echo "Checking if radio path matches path1 or path2..."
+
+        # Check if the path matches either of the specified paths
+        if [[ "$radio_path" == "$path1" || "$radio_path" == "$path2" ]]; then
+            echo "Path matches. Updating wireless configuration..."
+            # Copy the default wireless configuration without USB support
+            cp /etc/sysp/defaults/wireless-nousb /etc/config/wireless
+            echo "Configuration has been updated."
+            # Commit the changes to the wireless configuration
+            uci commit wireless
+            echo "Changes committed to wireless configuration."
+            # Restart the network service
+            /etc/init.d/network restart
+            echo "Network service restarted."
+        else
+            echo "Path does not match."
+        fi
+    else
+        echo "The file $FILE_PATH does not contain '0'."
+    fi
+else
+    echo "$FILE_PATH does not exist."
+fi

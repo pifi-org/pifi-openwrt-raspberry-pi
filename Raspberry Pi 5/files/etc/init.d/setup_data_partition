@@ -1,0 +1,56 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+start() {
+    #!/bin/bash
+
+    # Set the disk device
+    DISK="/dev/mmcblk0"
+
+    # Get the end sector of the last partition
+    END_SECTOR=$(fdisk -l ${DISK} | grep '^/dev' | tail -1 | awk '{print $3}')
+
+    # Calculate the start sector for the new partition
+    START_SECTOR=$((END_SECTOR + 1))
+
+    # Start fdisk in non-interactive mode
+    fdisk ${DISK} <<EOF
+n
+p
+3
+${START_SECTOR}
+
+w
+EOF
+
+    echo "The new partition table will be used at the next reboot."
+
+    # Sync disks to ensure the partition table is written
+    sync
+
+    # Check if the new partition already contains an ext4 filesystem
+    if fsck.ext4 -n ${DISK}p3; then
+        echo "The new partition ${DISK}p3 already contains an ext4 filesystem. Skipping formatting."
+    else
+        # Format the new partition as ext4
+        mkfs.ext4 ${DISK}p3
+        echo "The new partition ${DISK}p3 has been formatted as ext4."
+    fi
+
+    # Create the mount point directory if it doesn't exist
+    MOUNT_POINT="/mnt/mmcblk0p3"
+    mkdir -p ${MOUNT_POINT}
+
+    # Mount the new partition
+    mount ${DISK}p3 ${MOUNT_POINT}
+    rm -f /etc/rc.d/S99setup_data_partition
+
+    if [ $? -eq 0 ]; then
+        echo "The new partition ${DISK}p3 has been mounted at ${MOUNT_POINT}."
+    else
+        echo "Failed to mount the new partition ${DISK}p3 at ${MOUNT_POINT}."
+    fi
+
+    echo "Please reboot the system for the changes to take effect."
+}

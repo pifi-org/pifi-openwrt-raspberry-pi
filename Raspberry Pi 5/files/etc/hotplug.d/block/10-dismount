@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# Logging path
+LOGFILE="/tmp/10-dismount.log"
+
+# Load helper functions
+. /lib/functions.sh
+. /lib/functions/network.sh
+
+# Function to remove fstab entry, unmount device, and remove Samba configuration
+remove_fstab_unmount_and_samba() {
+    local devname="$1"
+    local mountpoint="$2"
+
+    # Check if device is mounted and unmount
+    if mount | grep -qs "$mountpoint"; then
+        echo "Unmounting $devname from $mountpoint" >> $LOGFILE
+        umount "$mountpoint"
+    fi
+
+    # Remove directory if empty
+    if [ -d "$mountpoint" ] && [ -z "$(ls -A $mountpoint)" ]; then
+        echo "Removing mount point directory: $mountpoint" >> $LOGFILE
+        rmdir "$mountpoint"
+    fi
+
+    # Remove the fstab entry
+    if grep -qs "$mountpoint" /etc/config/fstab; then
+        echo "Removing fstab entry for $mountpoint" >> $LOGFILE
+        fstab_index=$(uci show fstab | grep ".target='$mountpoint'" | sed 's/.\+\[\([0-9]*\)\].*/\1/')
+        uci delete fstab.@mount[$fstab_index]
+        uci commit fstab
+    fi
+
+    # Remove the Samba configuration
+    samba_index=$(uci show samba4 | grep ".path='$mountpoint'" | sed 's/.\+\[\([0-9]*\)\].*/\1/')
+    if [ ! -z "$samba_index" ]; then
+        echo "Removing Samba share for $mountpoint" >> $LOGFILE
+        uci delete samba4.@sambashare[$samba_index]
+        uci commit samba4
+        /etc/init.d/samba4 reload
+    fi
+}
+
+# Determine action
+if [ -n "$DEVNAME" ]; then
+    DEV_PATH="/dev/$DEVNAME"
+    MOUNT_POINT="/mnt/$DEVNAME"
+
+    if echo "$DEVNAME" | grep -q '[0-9]$'; then
+        MOUNT_POINT="/mnt/$DEVNAME"
+    else
+        FIRST_PARTITION=$(ls /dev/${DEVNAME}* | grep '[0-9]$' | head -n 1)
+        if [ -n "$FIRST_PARTITION" ]; then
+            MOUNT_POINT="/mnt/$(basename $FIRST_PARTITION)"
+        fi
+    fi
+
+    if [ "$ACTION" = "remove" ]; then
+        remove_fstab_unmount_and_samba "$DEV_PATH" "$MOUNT_POINT"
+    fi
+fi

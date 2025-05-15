@@ -1,0 +1,62 @@
+#!/bin/bash
+
+
+
+    # Function to get the port location of rtl88x2bu device
+    check_port() {
+        local output=$(lsusb)
+        if echo "$output" | grep -q "Bus 004.*802.11ac"; then
+            echo "Top"
+        elif echo "$output" | grep -q "Bus 002.*802.11ac"; then
+            echo "Bottom"
+        else
+            echo "Error"
+        fi
+    }
+
+# Function to get the current path setting
+check_path() {
+    local current_path=$(uci get wireless.radio1.path)
+    local bottom_path="platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0"
+    local top_path="platform/axi/1000120000.pcie/1f00300000.usb/xhci-hcd.1/usb4/4-1/4-1:1.0"
+
+    if [ "$current_path" == "$bottom_path" ]; then
+        echo "Bottom"
+    elif [ "$current_path" == "$top_path" ]; then
+        echo "Top"
+    else
+        echo "Error"
+    fi
+}
+
+
+    # Main execution to get current path and port location
+    path_location=$(check_path)
+    port_location=$(check_port)
+
+    # Compare and adjust if necessary
+    if [ "$path_location" != "$port_location" ]; then
+        if [ "$path_location" = "Top" ] && [ "$port_location" = "Bottom" ]; then
+            uci set wireless.radio1.path="platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0"
+  	uci set wireless.radio1.disabled='0'
+            uci commit wireless
+            sh /etc/sysp/reboot.sh
+            echo "Path updated to Bottom, network restarted."
+        elif [ "$path_location" = "Bottom" ] && [ "$port_location" = "Top" ]; then
+            uci set wireless.radio1.path="platform/axi/1000120000.pcie/1f00300000.usb/xhci-hcd.1/usb4/4-1/4-1:1.0"
+uci set wireless.radio1.disabled='0'
+            uci commit wireless
+             sh /etc/sysp/reboot.sh
+            echo "Path updated to Top, network restarted."
+        else
+            echo "Error in determining correct action."
+            exit 1
+        fi
+    elif [ "$path_location" = "Error" ] || [ "$port_location" = "Error" ]; then
+        echo "Error occurred in either path or port check."
+        exit 1
+    else
+        echo "Path and port match. No action needed."
+    fi
+
+ 

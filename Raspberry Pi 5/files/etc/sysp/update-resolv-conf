@@ -1,0 +1,36 @@
+#!/bin/sh
+
+case $script_type in
+up)
+    i=1
+    ns=""
+    while true; do
+        eval opt=\$foreign_option_${i}
+        [ -z "${opt}" ] && break
+
+        ns="$ns\n$(echo ${opt} | sed -e 's/dhcp-option DOMAIN/domain/g' -e 's/dhcp-option DNS//g')"
+
+        i=$((i + 1))
+    done
+
+    if [ -n "$ns" ]; then
+        echo -e "$ns" > /etc/adguard/dns/openvpn-upstream
+sh /etc/sysp/update-resolv-conf-openvpn up
+    else
+        echo -e " 1.1.1.1\n 1.1.1.1" > /etc/adguard/dns/openvpn-upstream
+    fi
+
+ #   uci set dhcp.@dnsmasq[0].resolvfile='/tmp/resolv.conf.vpn'
+  #  uci commit dhcp
+ #   /etc/init.d/dnsmasq restart &
+    ;;
+down)
+ #   [ -f "/tmp/resolv.conf.vpn" ] || return 0
+ #   rm -fr "/tmp/resolv.conf.vpn"
+ #   uci set dhcp.@dnsmasq[0].resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+ #   uci commit dhcp
+ #   /etc/init.d/dnsmasq restart &
+    ;;
+esac
+
+exit 0

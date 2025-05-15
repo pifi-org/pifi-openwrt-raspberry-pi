@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Define the wireless interface and the expected SSID
+expected_ssid="PiFi 5 Setup"
+interface="wifinet1"
+
+    # Fetch the current SSID of the interface
+    current_ssid=$(uci get wireless.default_radio0.ssid)
+
+    # Check if the current SSID matches the expected SSID
+    if [ "$current_ssid" = "$expected_ssid" ]; then
+        echo "Current SSID matches expected SSID."
+        sh /etc/sysp/pifi_restoreusb
+    else
+        echo "Current SSID does not match expected SSID. Detected SSID: $current_ssid"
+         sh /etc/sysp/pifi_unconfigured
+
+    fi
+

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+while true; do
+
+ sh /etc/sysp/pifi_checkusb;
+ sh /etc/sysp/pifi_firstboot;
+ sh /etc/sysp/pifi_checkusb_setup;
+    sh /etc/sysp/pifi_setupdetect;
+    sh /etc/sysp/pifi_checkport; 
+    sh /etc/sysp/pifi_recoverap 
+
+
+    # Wait for 60 seconds before rechecking
+    sleep 60
+done

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Check if the interface is wggb
+if [ "$INTERFACE" = "wggb" ]; then
+    # Actions for when the interface is brought up
+    if [ "$ACTION" = "ifup" ]; then
+        sh /etc/sysp/update-resolv-conf-wireguard up
+    fi
+    
+    # Actions for when the interface is brought down
+    if [ "$ACTION" = "ifdown" ]; then
+        sh /etc/sysp/update-resolv-conf-wireguard down
+    fi
+fi

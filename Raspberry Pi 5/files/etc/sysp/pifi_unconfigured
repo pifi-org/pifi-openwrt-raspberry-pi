@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Check conditions
+if [ "$(uci get wireless.default_radio1.ssid 2>/dev/null)" = "PiFi" ] && uci get wireless.default_radio1.key 2>&1 | grep -q 'uci: Entry not found'; then
+  echo "true"
+  # Perform the actions
+  cp /etc/sysp/defaults/restoreconfig/wireless /etc/config/wireless
+  uci commit wireless
+reboot -y
+fi

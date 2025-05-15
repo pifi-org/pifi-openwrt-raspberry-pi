@@ -1,0 +1,20 @@
+#!/bin/sh
+
+
+
+# Check the status of radio1
+wifi_status=$(wifi status radio1 | grep '"up":' | awk '{print $2}' | tr -d ',')
+
+# Compare the status
+if [ "$wifi_status" = "false" ]; then
+    echo "Radio1 is down. Changing channel to 48 and restarting network..."
+    # Set radio1 channel to 48
+    uci set wireless.radio1.channel='48'
+    # Commit the changes to the wireless config
+    uci commit wireless
+      /etc/init.d/network restart
+    # Restart the network service
+else
+    echo "Radio1 is up. No action needed."
+fi
+

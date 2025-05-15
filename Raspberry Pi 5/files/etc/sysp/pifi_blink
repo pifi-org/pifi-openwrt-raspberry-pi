@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Read the value from /etc/sysp/vpnactive
+value=$(cat /etc/sysp/vpnactive)
+
+# Check the value and control the LED accordingly
+if [ "$value" -eq 1 ]; then
+    # If the value is 1, blink the LED
+    echo 1 > /sys/class/leds/PWR/brightness
+    sleep 1
+    echo 0 > /sys/class/leds/PWR/brightness
+else
+    # If the value is 0, turn off the LED
+     echo 0 > /sys/class/leds/PWR/brightness
+    sleep 1
+    echo 1 > /sys/class/leds/PWR/brightness
+fi

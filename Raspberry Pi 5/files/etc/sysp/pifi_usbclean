@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Function to check and delete radio and its default configuration based on path
+check_and_delete_radio() {
+    local radio=$1
+    local default_radio="default_${radio}"
+    local path=$(uci get $radio.path 2>/dev/null)
+
+    echo "Checking path of $radio: $path"
+
+    # Paths to check against
+    local path1="platform/axi/1000120000.pcie/1f00300000.usb/xhci-hcd.1/usb4/4-1/4-1:1.0"
+    local path2="platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1:1.0"
+
+    if [ "$path" = "$path1" ] || [ "$path" = "$path2" ]; then
+        echo "Path matched. Deleting $radio, $default_radio, and associated interfaces..."
+        uci delete $radio
+        uci delete wireless.$default_radio
+        uci delete wireless.@wifi-iface[-1]  # Assuming it is the last added iface section
+        uci commit wireless
+        echo "$radio, $default_radio, and associated interfaces deleted successfully."
+        return
+    fi
+
+    echo "No match found for $radio."
+}
+
+# Adapt the radio identifiers for the function
+check_and_delete_radio wireless.radio2
+check_and_delete_radio wireless.radio3

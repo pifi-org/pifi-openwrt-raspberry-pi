@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Fetch the SSID of the default_radio0
+SSID=$(uci get wireless.default_radio0.ssid)
+
+# Check if the SSID contains 'Low Power'
+if echo "$SSID" | grep -q 'Low Power'; then
+    # Delete the wireless.default_radio0 configuration
+    uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='sta'
+uci set wireless.default_radio0.network='wwan'
+uci set wireless.default_radio0.ssid='Unavailable'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.key='Unavailable'
+uci commit wireless
+/etc/init.d/network reload
+
+fi

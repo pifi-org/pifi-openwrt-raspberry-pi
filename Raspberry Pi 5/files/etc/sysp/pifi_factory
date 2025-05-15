@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# This script checks if the value in /etc/crontabs/usb equals '1'.
+# If so, it performs a factory reset on an OpenWRT device and then reboots it.
+
+# Path to the file containing the value
+FILE_PATH="/etc/sysp/usb"
+
+# Check if the file exists and the value inside is '1'
+if [ -f "$FILE_PATH" ] && grep -qx '1' "$FILE_PATH"; then
+    # Perform factory reset without confirmation
+	cp /etc/sysp/defaults/wireless-nousb /etc/config/wireless
+	uci commit wireless
+	/etc/init.d/network reload
+    firstboot -y
+
+
+    # Reboot the device
+reboot
+
+else
+    echo "No reset required. The condition was not met."
+fi

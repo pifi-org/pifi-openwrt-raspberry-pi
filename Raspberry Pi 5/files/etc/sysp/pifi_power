@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Attempt to fetch the throttled status
+STATUS_HEX=$(vcgencmd get_throttled 2>/dev/null | cut -d= -f2)
+
+# Check if the vcgencmd command was successful
+if [ $? -ne 0 ]; then
+    echo "error: Failed to execute vcgencmd. Check if it's installed and accessible."
+    exit 1
+fi
+
+# Check if status is exactly "0x0"
+if [[ "$STATUS_HEX" == "0x0" ]]; then
+    echo "allgood"
+  sh /etc/sysp/pifi_power_repair
+else
+    echo "issue"
+    # Turn off LEDs as an immediate visual indicator
+    echo 0 > /sys/class/leds/led1/brightness & echo 0 > /sys/class/leds/led0/brightness
+    # Start configuring the wireless settings
+  uci set wireless.default_radio0.mode='ap'
+    uci set wireless.default_radio0.network='lan'
+    uci set wireless.default_radio0.ssid= 'Low Power Detected - PiFi'
+    uci set wireless.default_radio0.key='Raspberry314'
+    # Commit the changes and reload the network to apply them
+    uci commit wireless
+    /etc/init.d/network reload
+fi

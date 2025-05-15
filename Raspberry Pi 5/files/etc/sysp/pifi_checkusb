@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Path for the record file
+RECORD_FILE="/etc/sysp/usb"
+
+# Check if 'lsusb -t' contains 'rtl88x2bu'
+if lsusb  | grep -q "802.11ac"; then
+    echo "true"
+    # Create or overwrite the record file with '1'
+    echo '1' > "$RECORD_FILE"
+ 	mv /etc/sysp/usbcheck/pifi_checkusb_setup /etc/sysp/
+    chmod +x /etc/sysp/pifi_checkusb_setup
+else
+	    echo 'nope'
+
+   
+fi

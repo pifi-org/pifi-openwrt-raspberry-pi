@@ -1,0 +1,17 @@
+
+config samba
+	option workgroup 'WORKGROUP'
+	option charset 'UTF-8'
+	option description 'FileShare on PiFi'
+
+
+config sambashare
+	option name 'SD'
+	option path '/mnt/mmcblk0p3'
+	option read_only 'no'
+	option force_root '1'
+	option guest_ok 'yes'
+	option guest_only 'yes'
+	option create_mask '0666'
+	option dir_mask '0777'
+

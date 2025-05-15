@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Check if 'lsusb -t' contains 'rtl88x2bu'
+if lsusb  | grep -q "802.11ac"; then
+    echo "true"
+else
+    # Replace the wireless configuration
+    sh /etc/sysp/pifi_factory
+ fi
+   
