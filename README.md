@@ -1,4 +1,7 @@
-<h2> PiFi - The Simple Raspberry Pi Router Project</h2>
+<h2> PiFi - Turn Raspberry Pi into an High-Speed VPN Router in Seconds </h2>
+
+[![PiFi GitHub Screenshot](https://pifi-app.nyc3.cdn.digitaloceanspaces.com/pifi-github1%20(1).png)](https://pifi.org)
+
 
 
 PiFi is a project with free router firmware, a smartphone app and USB accessory that lets you very quickly turn Raspberry Pi into a powerful wireless router.
@@ -15,6 +18,9 @@ PiFi is a project with free router firmware, a smartphone app and USB accessory 
 
 ---
 
+## Demo Video
+[![YouTube Video Title](https://img.youtube.com/vi/jEFPdZbLLW0/0.jpg)](https://www.youtube.com/watch?v=jEFPdZbLLW0)
+
 
 ## Installation Instructions:
 
@@ -25,6 +31,8 @@ Or download on the [GitHub releases](https://github.com/pifi-org/pifi-openwrt-ra
 Installation is easy (download, flash with Raspberry Pi imager, insert SD card and power on and PiFi should show in WiFi Settings (default password Raspberry314). Then then follow the setup steps in the PiFi app. 
 
 For more detailed download and setup instructions, see the [download and setup guide](https://docs.pifi.org/download-setup)
+
+
 
 ## Contribute
 
