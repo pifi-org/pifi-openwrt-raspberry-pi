@@ -1,0 +1,48 @@
+#!/bin/bash
+
+RADIO="radio1"
+INTERFACE="phy1-ap0"
+
+# Function to check if radio1 is enabled
+is_radio_enabled() {
+    disabled=$(uci get wireless.${RADIO}.disabled 2>/dev/null)
+    if [[ "$disabled" == "1" ]]; then
+        echo "0"  # Not enabled
+    else
+        echo "1"  # Enabled
+    fi
+}
+
+# Function to check if interface exists and is UP (flags method)
+is_interface_up() {
+    ip link show "$INTERFACE" 2>/dev/null | grep -q "<.*UP.*>"
+}
+
+# Function to check if interface exists at all
+does_interface_exist() {
+    ip link show "$INTERFACE" > /dev/null 2>&1
+}
+
+# Main function
+main() {
+    if [[ $(is_radio_enabled) == "0" ]]; then
+        echo "Radio ${RADIO} is disabled. Nothing to do."
+        exit 0
+    fi
+
+    if does_interface_exist; then
+        if is_interface_up; then
+            echo "Interface ${INTERFACE} exists and is UP. All good."
+            exit 0
+        else
+            echo "Interface ${INTERFACE} exists but is DOWN. Bringing Wi-Fi up..."
+            wifi up
+        fi
+    else
+        echo "Interface ${INTERFACE} does not exist. Bringing Wi-Fi up..."
+        wifi up
+    fi
+}
+
+# Call main
+main

@@ -1,23 +1,17 @@
 #!/bin/sh
 
 while true; do
-
-
-    # Check if "handshake" is present in the output of wg show
     wg_handshake=$(wg show | grep -q "handshake" && echo "1" || echo "0")
-
-    # Check if OpenVPN is running
     openvpn_status=$(/etc/init.d/openvpn status | grep -q "running" && echo "1" || echo "0")
 
-    # If either WireGuard has a handshake or OpenVPN is running
     if [ "$wg_handshake" -eq "1" ] || [ "$openvpn_status" -eq "1" ]; then
-        echo 1 > /etc/sysp/vpnactive
-	sh /etc/sysp/pifi_blink
+        echo 1 > /tmp/vpnactive
     else
-        echo 0 > /etc/sysp/vpnactive
-sh /etc/sysp/pifi_blink
+        echo 0 > /tmp/vpnactive
     fi
 
-  # Wait for 30 seconds before rechecking
+    /bin/sh /etc/sysp/pifi_blink
+    /bin/sh /etc/sysp/pifi_apstatus
+
     sleep 30
 done
