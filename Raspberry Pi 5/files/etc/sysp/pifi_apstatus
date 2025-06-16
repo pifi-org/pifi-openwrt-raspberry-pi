@@ -3,6 +3,12 @@
 RADIO="radio1"
 INTERFACE="phy1-ap0"
 
+# Check if /etc/sysp/usb contains "1"
+if [[ "$(cat /etc/sysp/usb 2>/dev/null)" != "1" ]]; then
+    echo "/etc/sysp/usb is not set to 1. Exiting."
+    exit 0
+fi
+
 # Function to check if radio1 is enabled
 is_radio_enabled() {
     disabled=$(uci get wireless.${RADIO}.disabled 2>/dev/null)
